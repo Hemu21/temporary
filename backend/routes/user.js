@@ -18,9 +18,10 @@ const fetchGitHubData = async (username) => {
     };
     return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
   };
+  const labelsQuery = 'label:level1,level2,level3';
 
   while (true) {
-    const response = await axios.get(`https://api.github.com/search/issues?q=author:${username}+type:pr+created:>${date}&per_page=100&page=${page}`, { headers });
+    const response = await axios.get(`https://api.github.com/search/issues?q=author:${username}+type:pr+created:>${date}+is:merged+${labelsQuery}&per_page=100&page=${page}`, { headers });
     const data = response.data;
     if (data.items.length === 0) break;
 
@@ -45,6 +46,7 @@ const fetchGitHubData = async (username) => {
     page++;
   }
 
+  // Aggregate data by repository and calculate total points
   const aggregatedData = prs.reduce((acc, pr) => {
     const repoIndex = acc.findIndex(item => item.repo === pr.repo);
     if (repoIndex !== -1) {
@@ -55,6 +57,7 @@ const fetchGitHubData = async (username) => {
     }
     return acc;
   }, []);
+
   return aggregatedData;
 };
 
