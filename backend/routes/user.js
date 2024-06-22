@@ -5,31 +5,59 @@ const User = require('../models/User');
 const router = express.Router();
 
 const fetchGitHubData = async (username) => {
-    const prs = [];
-    let page = 1;
-    const date = '2024-05-09';
-    const headers = { Authorization: `token ${process.env.GITHUB_TOKEN}` };
+  const prs = [];
+  let page = 1;
+  const date = '2024-05-09';
+  const headers = { Authorization: `token ${process.env.GITHUB_TOKEN}` };
 
-    while (true) {
-      const response = await axios.get(`https://api.github.com/search/issues?q=author:${username}+type:pr+created:>${date}&per_page=100&page=${page}`, { headers });
-      const data = response.data;
-      if (data.items.length === 0) break;
-  
-      for (const pr of data.items) {
-        const prDetails = await axios.get(pr.url, { headers });
+  const calculatePoints = (labels) => {
+    const pointsMap = {
+      level1: 10,
+      level2: 25,
+      level3: 45,
+    };
+    return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
+  };
+
+  while (true) {
+    const response = await axios.get(`https://api.github.com/search/issues?q=author:${username}+type:pr+created:>${date}&per_page=100&page=${page}`, { headers });
+    const data = response.data;
+    if (data.items.length === 0) break;
+
+    const prDetailsPromises = data.items.map(pr => axios.get(pr.url, { headers }));
+    const prDetailsResponses = await Promise.all(prDetailsPromises);
+
+    prDetailsResponses.forEach((prDetailsResponse, index) => {
+      const pr = data.items[index];
+      if (prDetailsResponse.data.pull_request.merged_at) {
+        const points = calculatePoints(pr.labels.map(label => label.name));
         prs.push({
           title: pr.title,
           repo: pr.repository_url.split('/').slice(-2).join('/'),
           labels: pr.labels.map(label => label.name),
-          merged: prDetails.data.closed_at,
-          link: prDetails.data.html_url,
-          repo_url: prDetails.data.repository_url,
+          merged: prDetailsResponse.data.pull_request.merged_at,
+          link: prDetailsResponse.data.html_url,
+          points,
         });
       }
-      page++;
+    });
+
+    page++;
+  }
+
+  const aggregatedData = prs.reduce((acc, pr) => {
+    const repoIndex = acc.findIndex(item => item.repo === pr.repo);
+    if (repoIndex !== -1) {
+      acc[repoIndex].data.push(pr);
+      acc[repoIndex].totalPoints += pr.points;
+    } else {
+      acc.push({ repo: pr.repo, data: [pr], totalPoints: pr.points });
     }
-    return prs;
-  };
+    return acc;
+  }, []);
+  return aggregatedData;
+};
+
 
 // Route to get user data
 router.post('/get-data', async (req, res) => {
