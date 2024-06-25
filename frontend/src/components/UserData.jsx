@@ -23,7 +23,7 @@ const UserData = ({ user, onUpdate }) => {
     "TAHIR0110/ThereForYou"
   ], []);
 
-  const spamKeywords = useMemo(() => [".md", "readme", "template", "document", "contributing", "workflow", "bot", "action"], []);
+  const spamKeywords = useMemo(() => [".md", "readme", "template", "document", "contributing", "workflow", "bot", "action","docs"], []);
 
   const calculatePoints = (labels) => {
     let points = 0;
