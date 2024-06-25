@@ -1,7 +1,49 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 const UserData = ({ user, onUpdate }) => {
   const data = user;
+
+  const limitRepos = useMemo(() => [
+    "Recode-Hive/machine-learning-repos",
+    "Sulagna-Dutta-Roy/GGExtensions",
+    "kunjgit/GameZone",
+    "CodeHarborHub/codeharborhub.github.io",
+    "jfmartinz/ResourceHub",
+    "mdazfar2/HelpOps-Hub",
+    "Niketkumardheeryan/ML-CaPsule",
+    "dishamodi0910/APIVerse",
+    "ChromeGaming/*",
+    "abhisheks008/DL-Simplified",
+    "SyedImtiyaz-1/GetTechProjects",
+    "Rakesh9100/CalcDiverse",
+    "SyedImtiyaz-1/GetTechProjects",
+    "anuragverma108/SwapReads",
+    "animator/learn-python",
+    "fluttergems/awesome-open-source-flutter-apps",
+    "TAHIR0110/ThereForYou"
+  ], []);
+
+  const spamKeywords = useMemo(() => [".md", "readme", "template", "document", "contributing", "workflow", "bot", "action"], []);
+
+  const calculatePoints = (labels) => {
+    let points = 0;
+    labels.forEach((label) => {
+      if (label === "level1") points += 10;
+      if (label === "level2") points += 25;
+      if (label === "level3") points += 45;
+    });
+    return points;
+  };
+
+  const isRepoLimited = (repo) => {
+    return limitRepos.some((limitedRepo) => {
+      if (limitedRepo.endsWith("/*")) {
+        return repo.startsWith(limitedRepo.replace("/*", ""));
+      }
+      return repo === limitedRepo;
+    });
+  };
+
   return (
     <div>
       <div className="w-[95%] m-auto flex p-4 justify-evenly rounded-lg">
@@ -24,7 +66,7 @@ const UserData = ({ user, onUpdate }) => {
           Pull Requests
         </h2>
         <table className="w-[96%] m-auto">
-          <thead> 
+          <thead>
             <tr>
               <th>S.No</th>
               <th>Repo</th>
@@ -35,8 +77,27 @@ const UserData = ({ user, onUpdate }) => {
             </tr>
           </thead>
           <tbody>
-            {data.pullRequests.map((repoData, repoIndex) => (
-              repoData.data.map((pr, prIndex) => (
+            {data.pullRequests.map((repoData, repoIndex) => {
+              const repoIsLimited = isRepoLimited(repoData.repo);
+              let seenSpamPR = false;
+              let spamPoints = 0;
+              repoData.data.forEach((pr, index) => {
+                const isSpam = spamKeywords.some(keyword => pr.title.toLowerCase().includes(keyword));
+                const prPoints = calculatePoints(pr.labels);
+
+                if (isSpam && seenSpamPR) {
+                  spamPoints += prPoints;
+                } else if (isSpam && !seenSpamPR) {
+                  seenSpamPR = true;
+                }
+              });
+
+              const totalRepoPoints = repoData.data.reduce((acc, pr) => acc + calculatePoints(pr.labels), 0);
+              const pointsDifference = repoIsLimited
+                ? totalRepoPoints - 150
+                : spamPoints;
+
+              return repoData.data.map((pr, prIndex) => (
                 <React.Fragment key={`${repoIndex}-${prIndex}`}>
                   {prIndex === 0 && repoIndex !== 0 && (
                     <tr className="separator">
@@ -76,12 +137,27 @@ const UserData = ({ user, onUpdate }) => {
                         : "Not Merged"}
                     </td>
                     {prIndex === 0 && (
-                      <td rowSpan={repoData.data.length}>{repoData.totalPoints}</td>
+                      <td rowSpan={repoData.data.length}>
+                        {totalRepoPoints}
+                        <br />
+                        {repoIsLimited && pointsDifference > 0 && (
+                          <span className="text-red-500">
+                            {" "}
+                            (Points exceeded 150. Remove {pointsDifference} points)
+                          </span>
+                        )}
+                        {spamPoints > 0 && (
+                          <span className="text-red-500">
+                            {" "}
+                            (Found spam PRs. Remove {spamPoints} points)
+                          </span>
+                        )}
+                      </td>
                     )}
                   </tr>
                 </React.Fragment>
-              ))
-            ))}
+              ));
+            })}
           </tbody>
         </table>
       </div>
@@ -89,4 +165,5 @@ const UserData = ({ user, onUpdate }) => {
   );
 };
 
-export default UserData;
+const NamedUserData = React.memo(UserData);
+export default NamedUserData;

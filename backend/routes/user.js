@@ -25,8 +25,9 @@ const fetchGitHubData = async (username) => {
     const data = response.data;
     if (data.items.length === 0) break;
 
-    const prDetailsPromises = data.items.map(pr => axios.get(pr.url, { headers }));
-    const prDetailsResponses = await Promise.all(prDetailsPromises);
+    const prDetailsResponses = await Promise.all(
+      data.items.map(pr => axios.get(pr.url, { headers }))
+    );
 
     prDetailsResponses.forEach((prDetailsResponse, index) => {
       const pr = data.items[index];
@@ -46,7 +47,6 @@ const fetchGitHubData = async (username) => {
     page++;
   }
 
-  // Aggregate data by repository and calculate total points
   const aggregatedData = prs.reduce((acc, pr) => {
     const repoIndex = acc.findIndex(item => item.repo === pr.repo);
     if (repoIndex !== -1) {
@@ -60,7 +60,6 @@ const fetchGitHubData = async (username) => {
 
   return aggregatedData;
 };
-
 
 // Route to get user data
 router.post('/get-data', async (req, res) => {
