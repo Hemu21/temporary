@@ -1,8 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 const UserData = ({ user, onUpdate }) => {
   const data = user;
-
   const limitRepos = useMemo(() => [
     "Recode-Hive/machine-learning-repos",
     "Sulagna-Dutta-Roy/GGExtensions",
@@ -24,7 +23,11 @@ const UserData = ({ user, onUpdate }) => {
   ], []);
 
   const spamKeywords = useMemo(() => [".md", "readme", "template", "document", "contributing", "workflow", "bot", "action","docs"], []);
-
+  useEffect(() => {
+    let totalPointsSum = 0;
+    data.pullRequests.forEach((repoData) => totalPointsSum+=repoData.totalPoints)
+    console.log(totalPointsSum)
+  },[])
   const calculatePoints = (labels) => {
     let points = 0;
     labels.forEach((label) => {
@@ -34,7 +37,6 @@ const UserData = ({ user, onUpdate }) => {
     });
     return points;
   };
-
   const isRepoLimited = (repo) => {
     return limitRepos.some((limitedRepo) => {
       if (limitedRepo.endsWith("/*")) {
@@ -43,7 +45,6 @@ const UserData = ({ user, onUpdate }) => {
       return repo === limitedRepo;
     });
   };
-
   return (
     <div>
       <div className="w-[95%] m-auto flex p-4 justify-evenly rounded-lg">
@@ -77,7 +78,8 @@ const UserData = ({ user, onUpdate }) => {
             </tr>
           </thead>
           <tbody>
-            {data.pullRequests.map((repoData, repoIndex) => {
+            {
+              data.pullRequests.map((repoData, repoIndex) => {
               const repoIsLimited = isRepoLimited(repoData.repo);
               let seenSpamPR = false;
               let spamPoints = 0;
