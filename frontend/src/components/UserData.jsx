@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const UserData = ({ user, onUpdate }) => {
   const data = user;
@@ -83,7 +83,7 @@ const UserData = ({ user, onUpdate }) => {
               const repoIsLimited = isRepoLimited(repoData.repo);
               let seenSpamPR = false;
               let spamPoints = 0;
-              repoData.data.forEach((pr, index) => {
+              repoData.data.forEach((pr) => {
                 const isSpam = spamKeywords.some(keyword => pr.title.toLowerCase().includes(keyword));
                 const prPoints = calculatePoints(pr.labels);
 
