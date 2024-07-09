@@ -21,12 +21,12 @@ const UserData = ({ user, onUpdate }) => {
     "fluttergems/awesome-open-source-flutter-apps",
     "TAHIR0110/ThereForYou"
   ], []);
-
+  const [totalPointsSum,setTotalPointsSum] = useState(0);
   const spamKeywords = useMemo(() => [".md", "readme", "template", "document", "contributing", "workflow", "bot", "action","docs"], []);
   useEffect(() => {
     let totalPointsSum = 0;
     data.pullRequests.forEach((repoData) => totalPointsSum+=repoData.totalPoints)
-    console.log(totalPointsSum)
+    setTotalPointsSum(totalPointsSum)
   },[])
   const calculatePoints = (labels) => {
     let points = 0;
@@ -162,6 +162,11 @@ const UserData = ({ user, onUpdate }) => {
             })}
           </tbody>
         </table>
+        {totalPointsSum > 0 && (
+          <p className="text-black text-xs text-left">
+            Total Points: {totalPointsSum}
+          </p>
+        )}
       </div>
     </div>
   );
