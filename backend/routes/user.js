@@ -18,7 +18,7 @@ const fetchGitHubData = async (username) => {
     };
     return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
   };
-  const labelsQuery = 'label:level1,level2,level3';
+  const labelsQuery = "label:level1,level2,level3,gssoc24,GSSoC'24,gssoc,gssoc'24,GSSOC'2024,GSSOC,GSSOC'24";
 
   while (true) {
     const response = await axios.get(`https://api.github.com/search/issues?q=author:${username}+type:pr+created:>${date}+is:merged+${labelsQuery}&per_page=100&page=${page}`, { headers });
