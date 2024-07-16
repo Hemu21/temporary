@@ -30,3 +30,13 @@ export const updateUser = async (username, date, setLoading) => {
     window.location.reload();
   }
 };
+
+export const getAllPRs = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/user/get-all-prs`);
+    return response.data.totalMergedPRs
+  } catch (error) {
+    alert("Something went wrong");
+    window.location.reload();
+  }
+}

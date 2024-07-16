@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UserForm = ({ onSubmit }) => {
+const UserForm = ({ onSubmit, gssocPrsCount }) => {
   const [username, setUsername] = useState("");
 
   const handleSubmit = (e) => {
@@ -11,6 +11,7 @@ const UserForm = ({ onSubmit }) => {
   return (
     <div className="w-full pt-3">
       <h1 className="text-2xl text-center mt-4 font-bold">GitHub User Data</h1>
+      <h5 className="text-xl text-center mt-4 font-semibold"><span className="text-red-600 text-xl underline">NOTE:</span> Total GSSOC merged PRs in 2024 by contributors are <span className="underline font-bold text-2xl">{gssocPrsCount}</span></h5>
       <form onSubmit={handleSubmit} className="mt-6 flex justify-center m-2">
         <div className="m-3 w-[90%]">
           <input

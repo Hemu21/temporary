@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserForm from './components/UserForm';
 import UserData from './components/UserData';
-import { getUserData, updateUser } from './api/user';
+import { getAllPRs, getUserData, updateUser } from './api/user';
 import BeatLoader from "react-spinners/BeatLoader"
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading,setLoading] = useState(false)
+  const [totalPRsGssoc, setTotalPRsGssoc] = useState(0);
   function getCurrentDateTime() {
     const now = new Date();
     const date = now.getDate(); 
@@ -26,6 +27,14 @@ const App = () => {
     setUser(data);
   };
 
+  useEffect(() => {
+    const getAllPRCount = async () => {
+      const res = await getAllPRs();
+      setTotalPRsGssoc(res);
+    }
+    getAllPRCount()
+  }, [user]);
+
   const handleUpdate = async () => {
     const date = getCurrentDateTime()
     await updateUser(user.username,date,setLoading);
@@ -34,7 +43,7 @@ const App = () => {
 
   return (
     <div>
-      <UserForm onSubmit={handleGetData} />
+      <UserForm gssocPrsCount={totalPRsGssoc} onSubmit={handleGetData} />
       {loading && <div className='flex justify-center mt-16'><BeatLoader size={25} /></div>}
       {user && !loading && <UserData user={user} onUpdate={handleUpdate} />}
     </div>
