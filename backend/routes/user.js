@@ -34,6 +34,7 @@ const fetchGitHubData = async (username) => {
       level1: 10,
       level2: 25,
       level3: 45,
+      postman: 500,
     };
     return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
   };
