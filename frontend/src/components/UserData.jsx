@@ -58,6 +58,7 @@ const UserData = ({ user, onUpdate }) => {
       if (label === "level1") points += 10;
       if (label === "level2") points += 25;
       if (label === "level3") points += 45;
+      if (label === "postman") points += 500;
     });
     return points;
   };
