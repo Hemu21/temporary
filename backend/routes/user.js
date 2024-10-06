@@ -39,7 +39,7 @@ const fetchGitHubData = async (username) => {
     return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
   };
   const labelsQuery =
-    "label:level1,level2,level3,gssoc24,GSSoC'24,gssoc,gssoc'24,GSSOC'2024,GSSOC,GSSOC'24";
+    "label:level1,level2,level3,level 1,level 2,level 3,Level 1,Level 2,Level 3,Level-1,Level-2,Level-3,level-1,level-2,level-3";
 
   while (true) {
     const response = await axios.get(
