@@ -10,7 +10,7 @@ const fetchGitHubDataAllPRs = async () => {
   };
   const date = "2024-07-30";
   const labelsQuery =
-    "label:level1,level2,level3,level 1,level 2,level 3,Level 1,Level 2,Level 3,Level-1,Level-2,Level-3,level-1,level-2,level-3";
+    "label:gssoc-ext";
   try {
     const response = await axios.get(
       `https://api.github.com/search/issues?q=type:pr+is:merged+created:>${date}+${labelsQuery}&per_page=100`,
@@ -39,7 +39,7 @@ const fetchGitHubData = async (username) => {
     return labels.reduce((total, label) => total + (pointsMap[label] || 0), 0);
   };
   const labelsQuery =
-    "label:level1,level2,level3,level 1,level 2,level 3,Level 1,Level 2,Level 3,Level-1,Level-2,Level-3,level-1,level-2,level-3";
+    "label:gssoc-ext";
 
   while (true) {
     const response = await axios.get(
