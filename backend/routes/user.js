@@ -8,9 +8,9 @@ const fetchGitHubDataAllPRs = async () => {
   const headers = {
     Authorization: `token ${process.env.GITHUB_TOKEN}`,
   };
-  const date = "2024-05-09";
+  const date = "2024-07-30";
   const labelsQuery =
-    "label:level1,level2,level3,gssoc24,GSSoC'24,gssoc,gssoc'24,GSSOC'2024,GSSOC,GSSOC'24";
+    "label:level1,level2,level3,level 1,level 2,level 3,Level 1,Level 2,Level 3,Level-1,Level-2,Level-3,level-1,level-2,level-3";
   try {
     const response = await axios.get(
       `https://api.github.com/search/issues?q=type:pr+is:merged+created:>${date}+${labelsQuery}&per_page=100`,
@@ -26,7 +26,7 @@ const fetchGitHubDataAllPRs = async () => {
 const fetchGitHubData = async (username) => {
   const prs = [];
   let page = 1;
-  const date = "2024-05-09";
+  const date = "2024-07-30";
   const headers = { Authorization: `token ${process.env.GITHUB_TOKEN}` };
 
   const calculatePoints = (labels) => {
