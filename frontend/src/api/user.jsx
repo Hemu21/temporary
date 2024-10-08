@@ -11,7 +11,8 @@ export const getUserData = async (username, setLoading) => {
     setLoading(false);
     return response.data;
   } catch (error) {
-    alert("Something went wrong");
+    console.log(error.response.data);
+    alert(error.response.data?.msg || "Something went wrong");
     window.location.reload();
   }
   setLoading(false);

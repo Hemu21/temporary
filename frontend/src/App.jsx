@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserForm from './components/UserForm';
 import UserData from './components/UserData';
 import { getAllPRs, getUserData, updateUser } from './api/user';
