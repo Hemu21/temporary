@@ -6,23 +6,22 @@ const UserData = ({ user, onUpdate }) => {
   console.log(data);
   const limitRepos = useMemo(
     () => [
-      "Recode-Hive/machine-learning-repos",
-      "Sulagna-Dutta-Roy/GGExtensions",
-      "kunjgit/GameZone",
-      "CodeHarborHub/codeharborhub.github.io",
-      "jfmartinz/ResourceHub",
-      "mdazfar2/HelpOps-Hub",
-      "Niketkumardheeryan/ML-CaPsule",
-      "dishamodi0910/APIVerse",
-      "ChromeGaming/*",
+      "iamrahulmahato/master-web-development",
+      "beRajeevKumar/Frontend_Mentor",
+      "AlgoGenesis/C",
       "abhisheks008/DL-Simplified",
-      "SyedImtiyaz-1/GetTechProjects",
-      "Rakesh9100/CalcDiverse",
-      "SyedImtiyaz-1/GetTechProjects",
-      "anuragverma108/SwapReads",
-      "animator/learn-python",
-      "fluttergems/awesome-open-source-flutter-apps",
-      "TAHIR0110/ThereForYou",
+      "UppuluriKalyani/ML-Nexus",
+      "Kushal997-das/Project-Guidance",
+      "swaraj-das/Collect-your-GamingTools",
+      "Aryan-Chharia/Computer-Vision-Projects",
+      "Niketkumardheeryan/ML-CaPsule",
+      "Puskar-Roy/create-my-api",
+      "rohitinu6/Stock-Price-Prediction",
+      "mdazfar2/HelpOps-Hub",
+      "UTSAVS26/PyVerse",
+      "recodehive/machine-learning-repos",
+      "UTSAVS26/PySnippets",
+      "yashasvini121/predictive-calc",
     ],
     []
   );
@@ -54,10 +53,17 @@ const UserData = ({ user, onUpdate }) => {
   }, []);
   const calculatePoints = (labels) => {
     let points = 0;
-    labels.forEach((label) => {
+    labels.forEach((label1) => {
+      const label = label1.toLowerCase();
       if (label === "level1") points += 10;
       if (label === "level2") points += 25;
       if (label === "level3") points += 45;
+      if (label === "level 1") points += 10;
+      if (label === "level 2") points += 25;
+      if (label === "level 3") points += 45;
+      if (label === "level-1") points += 10;
+      if (label === "level-2") points += 25;
+      if (label === "level-3") points += 45;
       if (label === "postman") points += 500;
     });
     return points;
@@ -70,6 +76,7 @@ const UserData = ({ user, onUpdate }) => {
       return repo === limitedRepo;
     });
   };
+  const regex = /level[ -]?([123])/i;
   return (
     <div>
       <div className="w-[95%] m-auto flex p-4 justify-evenly rounded-lg">
@@ -162,7 +169,22 @@ const UserData = ({ user, onUpdate }) => {
                         {pr.title}
                       </a>
                     </td>
-                    <td>{pr.labels.join(", ")}</td>
+                    <td>
+                      {pr.labels
+                        .map((label, index) =>
+                          regex.test(label) ? (
+                            <span
+                              key={index}
+                              style={{ color: "red", fontWeight: "bold" }}
+                            >
+                              {label}
+                            </span>
+                          ) : (
+                            <span key={index}>{label}</span>
+                          )
+                        )
+                        .reduce((prev, curr) => [prev, ", ", curr])}
+                    </td>
                     <td>
                       {pr.merged
                         ? new Date(pr.merged).toLocaleString()
