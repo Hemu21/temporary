@@ -133,7 +133,7 @@ const UserData = ({ user, onUpdate }) => {
                 0
               );
               const pointsDifference = repoIsLimited
-                ? totalRepoPoints - 150
+                ? totalRepoPoints - 200
                 : spamPoints;
 
               return repoData.data.map((pr, prIndex) => (
