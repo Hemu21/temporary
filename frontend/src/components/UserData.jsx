@@ -22,6 +22,8 @@ const UserData = ({ user, onUpdate }) => {
       "recodehive/machine-learning-repos",
       "UTSAVS26/PySnippets",
       "yashasvini121/predictive-calc",
+      "ajay-dhangar/algo",
+      "manikumarreddyu/AgroTech-AI"
     ],
     []
   );
