@@ -67,6 +67,7 @@ const UserData = ({ user, onUpdate }) => {
       if (label === "level-2") points += 25;
       if (label === "level-3") points += 45;
       if (label === "postman") points += 500;
+      if (label === "hack-web3") points += 500;
     });
     return points;
   };
